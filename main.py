@@ -1,5 +1,3 @@
-#수정 要 사항: play 中 slider diable 할것, replay 시 slider 위치에서 play되게 할 것
-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -7,9 +5,8 @@ from matplotlib.widgets import Button, Slider
 from matplotlib import font_manager as fm
 
 # 폰트 파일에서 직접 폰트 로드
-font_path = './fonts/NotoSansKR-VariableFont_wght.ttf'  # 실제 폰트 파일 경로로 변경해야 합니다
+font_path = './fonts/NotoSerifCJK-ExtraLight.ttc'  # 실제 폰트 파일 경로로 변경
 font_prop = fm.FontProperties(fname=font_path)
-
 
 # 폰트 매니저에 폰트 추가
 fm.fontManager.addfont(font_path)
@@ -22,7 +19,7 @@ plt.rcParams['axes.unicode_minus'] = False
 initial_velocity = float(input("초기 속도(m/s)를 입력하세요: "))
 angle = float(input("발사 각도(도)를 입력하세요: "))
 initial_height = float(input("시작 높이(m)를 입력하세요: "))
-g = 9.81  # m/s^2 (중력가속도)
+g = 9.81  #중력가속도
 
 # 각도 변환
 theta = np.radians(angle)
@@ -31,7 +28,7 @@ theta = np.radians(angle)
 vx = initial_velocity * np.cos(theta)
 vy = initial_velocity * np.sin(theta)
 
-# 시간 설정 (이차 방정식의 해를 이용해 최대 시간 계산)
+# 시간 설정
 t_flight = (vy + np.sqrt(vy ** 2 + 2 * g * initial_height)) / g
 t = np.linspace(0, t_flight, 500)
 
@@ -59,9 +56,9 @@ line, = ax.plot([], [], 'bo', ms=10)
 trajectory, = ax.plot([], [], 'r-', lw=2)
 
 # 텍스트 객체 생성 - 위치 조정
-time_text = ax.text(0.02, 0.95, '', transform=ax.transAxes, fontproperties=font_prop)
-speed_text = ax.text(0.02, 0.85, '', transform=ax.transAxes, fontproperties=font_prop)
-pos_text = ax.text(0.02, 0.75, '', transform=ax.transAxes, fontproperties=font_prop)
+time_text = ax.text(0.02, 0.87, '', transform=ax.transAxes, fontproperties=font_prop)
+speed_text = ax.text(0.02, 0.76, '', transform=ax.transAxes, fontproperties=font_prop)
+pos_text = ax.text(0.02, 0.65, '', transform=ax.transAxes, fontproperties=font_prop)
 
 
 def init():
@@ -113,9 +110,11 @@ def toggle_play(event):
     if paused:
         ani.event_source.start()
         play_button.label.set_text('\u2161')  # 새로운 일시정지 아이콘 (U+2161)
+        frame_slider.set_active(False)  # 재생 중 슬라이더 비활성화
     else:
         ani.event_source.stop()
         play_button.label.set_text('\u25B6')  # 재생 아이콘
+        frame_slider.set_active(True)  # 일시정지 시 슬라이더 활성화
     paused = not paused
     plt.draw()
 
